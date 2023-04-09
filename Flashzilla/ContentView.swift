@@ -9,19 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var count = 0
-    
-    let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         Text("Hello world")
-            .onReceive(timer) { time in
-                if count == 5 {
-                    timer.upstream.connect().cancel()
-                } else {
-                    print("The time is now: \(time)")
+            .onChange(of: scenePhase) { newPhase in
+                switch newPhase {
+                case .active:
+                    print("Active")
+                case .inactive:
+                    print("Inactive")
+                case.background:
+                    print("Background")
+                @unknown default:
+                    fatalError()
                 }
-                count += 1
             }
     }
 }
